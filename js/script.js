@@ -20,7 +20,7 @@ let getWeather = () => {
   }
   //If input field is NOT empty
   else {
-    let url1 = `https://api.openweathermap.org/data/2.5/weather?q=${cityValue}&appid=${key}&units=metric`;
+    let url1 = `https://api.openweathermap.org/data/2.5/weather?q=${cityValue}&appid=${key}&units=metric&lang=ru`;
     let url2 = `https://api.openweathermap.org/data/2.5/forecast?q=${cityValue}&appid=${key}&units=metric`;
     //Clear the input field
     cityRef.value = "";
@@ -45,8 +45,8 @@ let getWeather = () => {
         console.log(info);
         result.innerHTML = `<div class="cloudCover"><img src="../images/icons/${getImage(icon)}.png" alt=""></div>
                             <div class="city">${city}</div>
-                            <div class="temp">${Math.round(temp)}&#176</div>
-                            <div class="data__time">${getUserTime()}</div>`;
+                            <div class="temp">+${Math.round(temp)}&#176</div>
+                            <div class="data__time">${getUserTime(0)}</div>`;
 
       })
       //If city name is NOT valid
@@ -65,11 +65,11 @@ let getWeather = () => {
         const abc = weekArr.filter(item => item.dt_txt.includes("12:00:00")==true)
         console.log(abc)
         resultWeek.innerHTML = `
-        <div class="first-day">${Math.round(abc[0].main.temp)}</div>
-        <div class="first-day">${Math.round(abc[1].main.temp)}</div>
-        <div class="first-day">${Math.round(abc[2].main.temp)}</div>
-        <div class="first-day">${Math.round(abc[3].main.temp)}</div>
-        <div class="first-day">${Math.round(abc[4].main.temp)}</div>
+        <div class="first-day">+${Math.round(abc[0].main.temp)}&#176 <img src="../images/icons/${getImage(abc[0].weather[0].icon)}.png" alt=""></div>
+        <div class="first-day">+${Math.round(abc[1].main.temp)}&#176 <img src="../images/icons/${getImage(abc[1].weather[0].icon)}.png" alt=""></div>
+        <div class="first-day">+${Math.round(abc[2].main.temp)}&#176 <img src="../images/icons/${getImage(abc[2].weather[0].icon)}.png" alt=""></div>
+        <div class="first-day">+${Math.round(abc[3].main.temp)}&#176 <img src="../images/icons/${getImage(abc[3].weather[0].icon)}.png" alt=""></div>
+        <div class="first-day">+${Math.round(abc[4].main.temp)}&#176 <img src="../images/icons/${getImage(abc[4].weather[0].icon)}.png" alt=""></div>
         `
       })
   }
@@ -128,17 +128,14 @@ window.addEventListener("load", getWeather);
 
 
 
-console.log(new Date())
-
-
 const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
 const mounth = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октябрь', 'Ноября', 'Декабря'] 
 
-function getUserTime (t=new Date()) {
-  let d = days[t.getDay()];
-  let D = t.getDate();
+function getUserTime (a) {
+  let t = new Date();
+  let d = days[t.getDay()+a];
+  let D = t.getDate()+a;
   let m = mounth[t.getMonth()]
   return`${d}, ${D} ${m}` 
 }
 
-console.log(getUserTime())

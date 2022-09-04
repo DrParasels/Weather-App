@@ -5,11 +5,12 @@
   font-family: "Poppins", sans-serif;
 }
 
+
 :root {
   --white: #ffffff;
   --off-white: #e5e5e5;
   --transp-white-1: rgba(255, 255, 255, 0.25);
-  --transp-white-2: rgba(255, 255, 255, 0.1);
+  --transp-white-2: rgba(255, 255, 255, 0.7);
   --blue-1: #62b8f5;
   --blue-2: #4475ef;
   --shadow: rgba(3, 46, 87, 0.2);
@@ -32,7 +33,7 @@ body {
 
 .container {
   width: 100%;
-  background: var(--transp-white-2);
+  background-image: url('../images/111.jpg');
   backdrop-filter: blur(10px);
   padding: 3em 1.8em;
   border: 2px solid var(--transp-white-2);
@@ -77,11 +78,36 @@ body {
 }
 
 .result {
+  max-width: 11em;
   margin-bottom: 4em;
+  border-radius: 12px;
   background-color: var(--transp-white-2);
+  padding: 1em;
+}
+
+.temp {
+  font-size: 3em;
+  font-weight: 600;
+}
+
+.cloudCover img {
+  width: 7em;
+  height: 7em;
 }
 
 .result-week {
   display: flex;
   justify-content: space-between;
+}
+
+.first-day {
+  margin-right: 1em;
+  border: 1px solid var(--transp-white-2);
+  border-radius: 0.5em;
+  background-color: var(--transp-white-2);
+}
+
+.first-day img{
+  width: 4em;
+  height: 4em;
 }
