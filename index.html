@@ -21,12 +21,48 @@
             id="city"
             value="Москва"
           />
-          <button class="search-btn">Поиск</button>
+          <button class="search-btn">Найти</button>
+          <div class="switch-box">
+            <button class="switch day">День</button>
+            <button class="switch week">Неделя</button>
+          </div>
         </div>
 
-        <div class="result"></div>
+        <div class="inner">
+          <div class="forcast-day">
+            <div class="result"></div>
+            <div class="result__box">
+              <div class="result__humidity">
+                <div class="result__humidity-title">Влажность</div>
+                <div class="result__humidity-value">2v/c</div>
+              </div>
+              <div class="result__wind">
+                <div class="result__wind-title">Скорость ветра</div>
+                <div class="result__wind-value">2 м/с</div>
+              </div>
+              <div class="result__pressure">
+                <div class="result__pressure-title">Давление</div>
+                <div class="result__pressure-value">2v/c</div>
+              </div>
+            </div>
 
-        <div class="result-week"></div>
+            <div class="result-week"></div>
+          </div>
+
+          <div class="forcast-week">
+            <ul class="weather-week">
+              <!-- <li class="week-item">
+                <div class="week__data"></div>
+                <div class="week__temp"></div>
+                <div class="week__icon"></div>
+              </li>
+              <li class="week-item">2</li>
+              <li class="week-item">3</li>
+              <li class="week-item">4</li>
+              <li class="week-item">5</li> -->
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
     <!-- Script -->

@@ -4,6 +4,12 @@ let result = document.querySelector(".result"),
   searchBtn = document.querySelector(".search-btn"),
   cityRef = document.getElementById("city"),
   resultWeek = document.querySelector(".result-week"),
+  humidityValue = document.querySelector(".result__humidity-value"),
+  windValue = document.querySelector(".result__wind-value"),
+  pressureValue = document.querySelector(".result__pressure-value"),
+  switchDay = document.querySelector(".day"),
+  switchWeek = document.querySelector(".week"),
+  weatherWeek = document.querySelector(".weather-week"),
   info = {
     city: "Moscow",
     temp: "+25",
@@ -28,12 +34,12 @@ let getWeather = () => {
       .then((resp) => resp.json())
       //If city name is valid
       .then((data) => {
-        console.log(data);
         const {
           name: city,
-          main: { temp },
+          main: { temp, humidity, pressure },
+          wind: { speed },
           weather: {
-            0: { icon },
+            0: { icon, description },
           },
         } = data;
 
@@ -44,7 +50,10 @@ let getWeather = () => {
         <div class="temp">+${Math.round(temp)}&#176</div></div>
         <div class="cloudCover"><img src="../images/icons/${getImage(
           icon
-        )}.png" alt=""></div>`;
+        )}.png" alt=""><div>${description}</div></div>`;
+        humidityValue.textContent = humidity + " %";
+        windValue.textContent = Math.round(speed) + " м/с";
+        pressureValue.textContent = Math.round(pressure * 0.74) + " мм рт.ст";
       })
       //If city name is NOT valid
       .catch(() => {
@@ -55,18 +64,34 @@ let getWeather = () => {
       .then((resp) => resp.json())
       //If city name is valid
       .then((data) => {
-        console.log(data);
         weekArr = data.list;
-        console.log(weekArr);
+        console.log(weekArr, "2222");
+        const cba = weekArr.slice(0, 7);
+
+        cba.forEach((element, index) => {
+          resultWeek.innerHTML += `
+        <div class="first-day">
+        <span>${getDataWeek2(cba[index].dt_txt)}</span>
+        <img src="../images/icons/${getImage(
+          element.weather[0].icon
+        )}.png" alt="">
+          <div class="info">
+          <span>+${Math.round(element.main.temp)}&#176</span></div></div>`;
+        });
         const abc = weekArr.filter(
           (item) => item.dt_txt.includes("12:00:00") == true
         );
+
         console.log(abc);
-        abc.forEach((element) => {
-          resultWeek.innerHTML += `
-        <div class="first-day"><img src="../images/icons/${getImage(
-          element.weather[0].icon
-        )}.png" alt="">+${Math.round(element.main.temp)}&#176</div>`;
+        abc.forEach((element, index) => {
+          weatherWeek.innerHTML += `
+        <div class="first-day"><span>${getDataWeek(
+          abc[index].dt_txt
+        )}</span><img src="../images/icons/${getImage(
+            element.weather[0].icon
+          )}.png" alt=""><div class="info"><span>+${Math.round(
+            element.main.temp
+          )}&#176</span></div></div>`;
         });
       });
   }
@@ -86,6 +111,8 @@ const getImage = (cloudCover) => {
       return "09";
     case "09n":
       return "09";
+    case "09d":
+      return "09";
     case "11d":
       return "11";
     case "11n":
@@ -95,11 +122,11 @@ const getImage = (cloudCover) => {
     case "13n":
       return "13";
     case "50d":
-      return "13";
+      return "50";
     case "50n":
       return "50";
     default:
-      return "50";
+      return cloudCover;
   }
 };
 
@@ -130,10 +157,43 @@ const mounth = [
   "Декабря",
 ];
 
-function getUserTime(a) {
+const daysShort = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+const mounthShort = [
+  "Янв",
+  "Фев",
+  "Март",
+  "Апр",
+  "Мая",
+  "Июня",
+  "Июля",
+  "Авг",
+  "Сент",
+  "Окт",
+  "Нояб",
+  "Дек",
+];
+
+function getUserTime() {
   let t = new Date();
-  let d = days[t.getDay() + a];
-  let D = t.getDate() + a;
+  let d = days[t.getDay()];
+  let D = t.getDate();
   let m = mounth[t.getMonth()];
   return `${d}, ${D} ${m}`;
 }
+
+const getDataWeek = function (item) {
+  let a = item.split(" ")[0];
+  let t = new Date(a);
+  let d = daysShort[t.getDay()];
+  let D = t.getDate();
+  let m = mounthShort[t.getMonth()];
+  return `${d}, ${D} ${m}`;
+};
+
+const getDataWeek2 = function (item) {
+  let a = item.split(" ");
+  let t = new Date(a[0]);
+  let d = daysShort[t.getDay()];
+  let D = t.getDate();
+  return `${d}, ${D} ${a[1].slice(0, -3)}`;
+};
