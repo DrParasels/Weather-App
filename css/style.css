@@ -76,7 +76,7 @@ body {
   border-radius: 10px;
 }
 
-.switch-box {
+.switch-btns {
   display: flex;
 }
 
@@ -95,77 +95,123 @@ body {
   margin-right: 15px;
 }
 
-.forcast-week {
-  /* display: none; */
+.forecast {
 }
 
-.forcast-day {
-  /* display: none; */
+.forecast__week {
 }
 
-.inner {
+.forecast__day {
+  display: none;
 }
 
-.result {
+.day__result {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* background-color: var(--transp-white-2); */
   padding: 1em;
   color: white;
 }
 
-.temp {
-  font-size: 3em;
-  font-weight: 600;
-}
-
-.city {
-  font-size: 24px;
-  font-weight: 600;
-}
-
-.data__time {
-  margin-bottom: 20px;
-}
-
-.cloudCover img {
-  width: 14em;
-  height: 14em;
-}
-
-.result__box {
+.result__inner {
   margin-bottom: 50px;
   display: flex;
   justify-content: space-around;
   color: white;
-  text-align: center;
 }
 
-.result-week {
+.result__title {
+  font-size: 14px;
+}
+
+.result__humidity-value,
+.result__wind-value,
+.result__pressure-value {
+  font-weight: 600;
+  font-size: 20px;
+}
+.day__temp {
+  font-size: 3em;
+  font-weight: 600;
+}
+
+.day__city {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.day__data {
+  margin-bottom: 10px;
+}
+
+.day__descr {
+  font-size: 14px;
+}
+
+.day__cloudCover img {
+  width: 14em;
+  height: 14em;
+}
+
+.day__hour-list {
   display: flex;
   justify-content: space-between;
   text-align: center;
+
+  /* border-bottom: 2px solid var(--transp-white-1); */
 }
 
-.first-day {
+.day__list-item {
   padding: 10px;
-  /* display: flex; */
   font-size: 14px;
   align-items: center;
   color: white;
-  border-radius: 0.5em;
+  border-radius: 1em;
   background-color: var(--transp-white-2);
-  border-bottom: 2px solid var(--transp-white-1);
+  border: 1px solid #080a35;
 }
 
-.first-day img {
+.day__list-item:first-child {
+  background-color: #4475ef;
+}
+
+.day__list-item img {
   margin-right: 5px;
   width: 50px;
   height: 50px;
 }
 
-.info {
+.day__item-temp {
+  font-size: 18px;
+}
+
+.week__list {
   display: flex;
   flex-direction: column;
+}
+
+.week__list-item {
+  display: grid;
+  grid-template-columns: 2fr 3fr 1fr;
+  justify-content: space-between;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: var(--transp-white-2);
+  margin-bottom: 15px;
+}
+
+.week__temp {
+  font-size: 26px;
+  font-weight: normal;
+  text-align: center;
+}
+
+.week__item-day {
+  display: block;
+}
+
+.week__list-item img {
+  width: 60px;
+  height: 60px;
 }
