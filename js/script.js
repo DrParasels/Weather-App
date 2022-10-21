@@ -50,16 +50,26 @@ let result = document.querySelector(".day__result"),
   switchWeek = document.querySelector(".week-btn"),
   forecastDay = document.querySelector(".forecast__day"),
   forecastWeek = document.querySelector(".forecast__week"),
-  weatherWeek = document.querySelector(".forecast__week");
-(info = {
-  city: "Moscow",
-  temp: "+25",
-  icon: "broken clouds",
-}),
-  (weekArr = {});
+  weatherWeek = document.querySelector(".forecast__week"),
+  targets = document.querySelectorAll(".switch"),
+  activeTab = 0,
+  old = 0,
+  width = [],
+  dur = 0.4,
+  animation,
+  info = {
+    city: "Moscow",
+    temp: "+25",
+    icon: "broken clouds",
+  },
+  weekArr = {};
+
+let articles = [];
+articles.push(forecastDay, forecastWeek);
 
 let getWeather = () => {
   hourList.innerHTML = "";
+  weatherWeek.innerHTML = "";
   let cityValue = cityRef.value;
   //If input field is empty
   if (cityValue.length === 0) {
@@ -138,21 +148,62 @@ let getWeather = () => {
             element.weather[0].icon
           )}.png" alt=""></div>`;
         });
-        switchDay.addEventListener("click", toggleFunc);
-        switchWeek.addEventListener("click", toggleFunc2);
+        for (let i = 0; i < targets.length; i++) {
+          targets[i].index = i;
+          width.push(articles[i].offsetWidth); // get height of each article
+          TweenMax.set(articles[i], { top: 0, x: -width[i] }); // push all articles up out of view
+          TweenMax.set(targets[0], { backgroundColor: "#4475ef" });
+          TweenMax.set(targets[1], {
+            backgroundColor: "rgba(255, 255, 255, 0.1)",
+          });
+          targets[i].addEventListener("click", doCoolStuff);
+        }
+        TweenMax.set(articles[0], { x: 0 });
+        TweenMax.set(".forecast", { height: articles[1].offsetHeight });
       });
   }
 };
 
-const toggleFunc = function () {
-  forecastWeek.style.display = "none";
-  forecastDay.style.display = "block";
-};
+function doCoolStuff() {
+  // check if clicked target is new and if the timeline is currently active
+  if (this.index != activeTab) {
+    //if there's an animation in-progress, jump to the end immediately so there aren't weird overlaps.
+    if (animation && animation.isActive()) {
+      animation.progress(1);
+    }
+    animation = new TimelineMax();
+    old = activeTab;
+    activeTab = this.index;
+    // animate bubble slider to clicked target
 
-const toggleFunc2 = function () {
-  forecastDay.style.display = "none";
-  forecastWeek.style.display = "block";
-};
+    // change text color on old and new tab targets
+    animation.to(
+      targets[old],
+      dur,
+      {
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
+        ease: Linear.easeNone,
+      },
+      0
+    );
+    animation.to(
+      targets[activeTab],
+      dur,
+      {
+        backgroundColor: "#4475ef",
+        ease: Linear.easeNone,
+      },
+      0
+    );
+    // slide current article down out of view and then set it to starting position at top
+    animation.to(articles[old], dur, { x: width[old], ease: Linear.ease }, 0);
+    animation.set(articles[old], { x: -width[old] });
+    // resize article block to accommodate new content
+    // animation.to(".article-block", dur, { width: heights[activeTab] });
+    // slide in new article
+    animation.to(articles[activeTab], 0.6, { x: 0, ease: Linear.ease }, 0);
+  }
+}
 
 const getImage = (cloudCover) => {
   switch (cloudCover) {

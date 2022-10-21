@@ -71,8 +71,8 @@ body {
   border-color: var(--white);
 }
 .search-btn {
-  color: #080a35;
-  background-color: var(--white);
+  color: white;
+  background-color: #4475ef;
   border-radius: 10px;
 }
 
@@ -84,11 +84,18 @@ body {
   outline: none;
   font-size: 1em;
   border: none;
-  color: #080a35;
-  background-color: var(--white);
+  color: white;
   border-radius: 10px;
   padding: 5px 20px;
   display: block;
+}
+
+.day__btn {
+  background-color: #4475ef;
+}
+
+.week__btn {
+  background-color: var(--transp-white-2);
 }
 
 .switch:not(:last-child) {
@@ -96,13 +103,22 @@ body {
 }
 
 .forecast {
+  width: 100%;
+  margin: auto;
+  overflow: hidden;
+  position: relative;
 }
 
 .forecast__week {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .forecast__day {
-  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .day__result {
@@ -176,7 +192,6 @@ body {
 }
 
 .day__list-item img {
-  margin-right: 5px;
   width: 50px;
   height: 50px;
 }
@@ -193,11 +208,15 @@ body {
 .week__list-item {
   display: grid;
   grid-template-columns: 2fr 3fr 1fr;
+  align-items: center;
   justify-content: space-between;
   color: white;
   padding: 10px;
   border-radius: 10px;
   background-color: var(--transp-white-2);
+}
+
+.week__list-item:not(:last-child) {
   margin-bottom: 15px;
 }
 
@@ -212,6 +231,6 @@ body {
 }
 
 .week__list-item img {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
 }
