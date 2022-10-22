@@ -1,43 +1,4 @@
 // let url = `https://api.openweathermap.org/data/2.5/forecast?q=moscow&appid=${key}&units=metric`
-const days = [
-  "Воскресенье",
-  "Понедельник",
-  "Вторник",
-  "Среда",
-  "Четверг",
-  "Пятница",
-  "Суббота",
-];
-const mounth = [
-  "Января",
-  "Февраля",
-  "Марта",
-  "Апреля",
-  "Мая",
-  "Июня",
-  "Июля",
-  "Августа",
-  "Сентября",
-  "Октября",
-  "Ноября",
-  "Декабря",
-];
-
-const daysShort = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
-const mounthShort = [
-  "Янв",
-  "Фев",
-  "Март",
-  "Апр",
-  "Мая",
-  "Июня",
-  "Июля",
-  "Авг",
-  "Сент",
-  "Окт",
-  "Нояб",
-  "Дек",
-];
 
 let result = document.querySelector(".day__result"),
   searchBtn = document.querySelector(".search-btn"),
@@ -50,7 +11,6 @@ let result = document.querySelector(".day__result"),
   switchWeek = document.querySelector(".week-btn"),
   forecastDay = document.querySelector(".forecast__day"),
   forecastWeek = document.querySelector(".forecast__week"),
-  weatherWeek = document.querySelector(".forecast__week"),
   targets = document.querySelectorAll(".switch"),
   activeTab = 0,
   old = 0,
@@ -69,16 +29,17 @@ articles.push(forecastDay, forecastWeek);
 
 let getWeather = () => {
   hourList.innerHTML = "";
-  weatherWeek.innerHTML = "";
+  forecastWeek.innerHTML = "";
   let cityValue = cityRef.value;
   //If input field is empty
   if (cityValue.length === 0) {
-    result.innerHTML = `<h3 class="msg">Please enter a city name</h3>`;
+    result.innerHTML = `<h3 class="msg">Введите название города</h3>`;
+    // forecastWeek.innerHTML = `<h3 class="msg">Город не найден</h3>`;
   }
   //If input field is NOT empty
   else {
     let url1 = `https://api.openweathermap.org/data/2.5/weather?q=${cityValue}&appid=${key}&units=metric&lang=ru`;
-    let url2 = `https://api.openweathermap.org/data/2.5/forecast?q=${cityValue}&appid=${key}&units=metric`;
+    let url2 = `https://api.openweathermap.org/data/2.5/forecast?q=${cityValue}&appid=${key}&units=metric&lang=ru`;
     //Clear the input field
     cityRef.value = "";
     fetch(url1)
@@ -112,6 +73,7 @@ let getWeather = () => {
       //If city name is NOT valid
       .catch(() => {
         result.innerHTML = `<h3 class="msg">Город не найден</h3>`;
+        forecastWeek.innerHTML = `<h3 class="msg">Город не найден</h3>`;
       });
 
     fetch(url2)
@@ -124,6 +86,7 @@ let getWeather = () => {
         hoursArr.forEach((element, index) => {
           hourList.innerHTML += `
         <div class="day__list-item">
+        
           <span>${getDataWeek2(hoursArr[index].dt_txt)}</span>
           <img src="../images/icons/${getImage(
             element.weather[0].icon
@@ -135,36 +98,150 @@ let getWeather = () => {
             </div>
           </div>`;
         });
+        console.log(hoursArr);
+        const list = document.querySelectorAll(".day__list-item");
+        list.forEach((item, index) =>
+          item.addEventListener("click", () =>
+            showDetals(index, hoursArr, list)
+          )
+        );
+        const showDetals = function (ind, hoursArr, list) {
+          list[ind].style.backgroundColor = "#4475ef";
+          list.forEach((item, index) => {
+            if (index !== ind) {
+              item.style.backgroundColor = "var(--transp-white-2)";
+            }
+          });
+          let city = document.querySelector(".day__city").textContent;
+          result.innerHTML = `<div class="day-box">
+                <div class="day__city">${city}</div>
+                <div class="day__data">${getUserTime(0)}</div>
+                <div class="day__temp">+${Math.round(
+                  hoursArr[ind].main.temp
+                )}&#176</div>
+                <div class="day__descr">${
+                  hoursArr[ind].weather[0].description
+                }</div>
+                </div>
+                <div class="day__cloudCover"><img src="../images/icons/${getImage(
+                  hoursArr[ind].weather[0].icon
+                )}.png" alt=""></div>`;
+          humidityValue.textContent = hoursArr[ind].main.humidity + " %";
+          windValue.textContent = Math.round(hoursArr[ind].wind.speed) + " м/с";
+          pressureValue.textContent =
+            Math.round(hoursArr[ind].main.pressure * 0.74) + " мм рт.ст";
+        };
 
         const abc = weekArr.filter(
           (item) => item.dt_txt.includes("12:00:00") == true
         );
+        if (abc.length === 5) {
+          abc.splice(-1, 1);
+        }
+        console.log(abc);
         abc.forEach((element, index) => {
-          weatherWeek.innerHTML += `
+          let idx = weekArr.indexOf(element);
+          console.log(weekArr[idx + 2]);
+          forecastWeek.innerHTML += `
         <div class="week__list-item">
-        <span class="week__date">${getDataWeek(abc[index].dt_txt)}</span>
+        <div class="week__item-short">
+        <span class="week__date">${getUserTimeWeek(
+          abc[index].dt_txt.split(" ")[0]
+        )}</span>
           <span class="week__temp">+${Math.round(element.main.temp)}&#176</span>
           <img src="../images/icons/${getImage(
             element.weather[0].icon
-          )}.png" alt=""></div>`;
+          )}.png" alt=""></div>
+          <div class="week__item-full">
+          <ul class="week__item-full-list">
+          <li class="week__full-item">
+          <span class="week__date">${getDataWeek2(
+            weekArr[idx - 2].dt_txt
+          )}</span>
+          <div class="week__full-inner">
+            <span class="week__temp">+${Math.round(
+              weekArr[idx - 2].main.temp
+            )}&#176</span>
+            <img src="../images/icons/${getImage(
+              weekArr[idx - 2].weather[0].icon
+            )}.png" alt="">
+            </div>
+          </li>
+          <li class="week__full-item">
+          <span class="week__date">${getDataWeek2(weekArr[idx].dt_txt)}</span>
+          <div class="week__full-inner">
+            <span class="week__temp">+${Math.round(
+              weekArr[idx].main.temp
+            )}&#176</span>
+            <img src="../images/icons/${getImage(
+              weekArr[idx].weather[0].icon
+            )}.png" alt="">
+            </div>
+          </li>
+          <li class="week__full-item">
+          <span class="week__date">${getDataWeek2(
+            weekArr[idx + 2].dt_txt
+          )}</span>
+          <div class="week__full-inner">
+            <span class="week__temp">+${Math.round(
+              weekArr[idx + 2].main.temp
+            )}&#176</span>
+            <img src="../images/icons/${getImage(
+              weekArr[idx + 2].weather[0].icon
+            )}.png" alt="">
+            </div>
+            </li>
+          <li class="week__full-item">
+          <span class="week__date">${getDataWeek2(
+            weekArr[idx + 4].dt_txt
+          )}</span>
+          <div class="week__full-inner">
+            <span class="week__temp">+${Math.round(
+              weekArr[idx + 4].main.temp
+            )}&#176</span>
+            <img src="../images/icons/${getImage(
+              weekArr[idx + 4].weather[0].icon
+            )}.png" alt="">
+            </div>
+          </li>
+          </ul>
+          </div>
+          </div>`;
         });
+
+        const listWeek = document.querySelectorAll(".week__item-short");
+        listWeek.forEach((item, index) =>
+          item.addEventListener("click", function () {
+            const parent = item.parentNode;
+
+            if (parent.classList.contains("active")) {
+              parent.classList.remove("active");
+            } else {
+              document
+                .querySelectorAll(".week__list-item")
+                .forEach((child) => child.classList.remove("active"));
+              parent.classList.add("active");
+            }
+          })
+        );
+
         for (let i = 0; i < targets.length; i++) {
           targets[i].index = i;
           width.push(articles[i].offsetWidth); // get height of each article
-          TweenMax.set(articles[i], { top: 0, x: -width[i] }); // push all articles up out of view
+          TweenMax.set(articles[i], { top: 0, x: -width[i] - 3 }); // push all articles up out of view
           TweenMax.set(targets[0], { backgroundColor: "#4475ef" });
           TweenMax.set(targets[1], {
             backgroundColor: "rgba(255, 255, 255, 0.1)",
           });
-          targets[i].addEventListener("click", doCoolStuff);
+          targets[i].addEventListener("click", doSwipe);
         }
         TweenMax.set(articles[0], { x: 0 });
-        TweenMax.set(".forecast", { height: articles[1].offsetHeight });
+        TweenMax.set(".forecast", { height: articles[0].offsetHeight });
       });
   }
 };
 
-function doCoolStuff() {
+function doSwipe() {
   // check if clicked target is new and if the timeline is currently active
   if (this.index != activeTab) {
     //if there's an animation in-progress, jump to the end immediately so there aren't weird overlaps.
@@ -197,7 +274,7 @@ function doCoolStuff() {
     );
     // slide current article down out of view and then set it to starting position at top
     animation.to(articles[old], dur, { x: width[old], ease: Linear.ease }, 0);
-    animation.set(articles[old], { x: -width[old] });
+    animation.set(articles[old], { x: -width[old] - 3 });
     // resize article block to accommodate new content
     // animation.to(".article-block", dur, { width: heights[activeTab] });
     // slide in new article
@@ -205,58 +282,27 @@ function doCoolStuff() {
   }
 }
 
-const getImage = (cloudCover) => {
-  switch (cloudCover) {
-    case "03d":
-      return "03";
-    case "03n":
-      return "03";
-    case "04d":
-      return "04";
-    case "04n":
-      return "04";
-    case "09d":
-      return "09";
-    case "09n":
-      return "09";
-    case "09d":
-      return "09";
-    case "11d":
-      return "11";
-    case "11n":
-      return "11";
-    case "13d":
-      return "13";
-    case "13n":
-      return "13";
-    case "50d":
-      return "50";
-    case "50n":
-      return "50";
-    default:
-      return cloudCover;
-  }
-};
-
 searchBtn.addEventListener("click", getWeather);
 window.addEventListener("load", getWeather);
 
-function getUserTime() {
-  let t = new Date();
+function getUserTime(item) {
+  let t = new Date(item);
+  if (item === 0) {
+    t = new Date();
+  }
   let d = days[t.getDay()];
   let D = t.getDate();
   let m = mounth[t.getMonth()];
   return `${d}, ${D} ${m}`;
 }
 
-const getDataWeek = function (item) {
-  let a = item.split(" ")[0];
-  let t = new Date(a);
+function getUserTimeWeek(item) {
+  let t = new Date(item);
   let d = days[t.getDay()];
   let D = t.getDate();
   let m = mounth[t.getMonth()];
-  return `${d}, ${D} ${m}`;
-};
+  return `<span>${d}</span><span> ${D}, ${m}</span>`;
+}
 
 const getDataWeek2 = function (item) {
   let a = item.split(" ");

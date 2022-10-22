@@ -1,4 +1,5 @@
 * {
+  list-style-type: none;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -90,8 +91,12 @@ body {
   display: block;
 }
 
-.day__btn {
-  background-color: #4475ef;
+.switch:hover {
+  background-color: #fff;
+}
+
+.day__btn:hover {
+  background-color: #4b5b85;
 }
 
 .week__btn {
@@ -107,9 +112,11 @@ body {
   margin: auto;
   overflow: hidden;
   position: relative;
+  color: #fff;
 }
 
 .forecast__week {
+  width: 100%;
   position: absolute;
   top: 0;
   left: 0;
@@ -185,6 +192,7 @@ body {
   border-radius: 1em;
   background-color: var(--transp-white-2);
   border: 1px solid #080a35;
+  transition: all 0.3s;
 }
 
 .day__list-item:first-child {
@@ -206,6 +214,10 @@ body {
 }
 
 .week__list-item {
+  position: relative;
+}
+
+.week__item-short {
   display: grid;
   grid-template-columns: 2fr 3fr 1fr;
   align-items: center;
@@ -214,6 +226,37 @@ body {
   padding: 10px;
   border-radius: 10px;
   background-color: var(--transp-white-2);
+  transition: all 0.5s;
+}
+
+.active .week__item-short {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.week__item-full {
+  background-color: var(--transp-white-2);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  color: white;
+  overflow: hidden;
+  max-height: 0;
+  position: relative;
+  transition: all 0.5s;
+}
+
+.active .week__item-full {
+  border-top: 1px solid #ffffff83;
+  overflow: hidden;
+  max-height: 1000px;
+  position: relative;
+  transition: all 2s;
+}
+
+.week__item-full-list {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 10px;
 }
 
 .week__list-item:not(:last-child) {
@@ -221,9 +264,24 @@ body {
 }
 
 .week__temp {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: normal;
   text-align: center;
+}
+
+.week__date {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.week__full-inner {
+  display: flex;
+  align-items: center;
+}
+
+.week__date span:first-child {
+  font-weight: 600;
 }
 
 .week__item-day {
@@ -231,6 +289,6 @@ body {
 }
 
 .week__list-item img {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
 }
