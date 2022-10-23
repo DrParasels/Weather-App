@@ -155,15 +155,13 @@ let getWeather = () => {
           <div class="week__item-full">
           <ul class="week__item-full-list">
           <li class="week__full-item">
-          <span class="week__date">${getDataWeek2(
-            weekArr[idx - 2].dt_txt
-          )}</span>
+          <span class="week__date">${getDataWeek2(weekArr[idx].dt_txt)}</span>
           <div class="week__full-inner">
             <span class="week__temp">+${Math.round(
-              weekArr[idx - 2].main.temp
+              weekArr[idx].main.temp
             )}&#176</span>
             <img src="../images/icons/${getImage(
-              weekArr[idx - 2].weather[0].icon
+              weekArr[idx].weather[0].icon
             )}.png" alt="">
             </div>
           </li>
